@@ -199,7 +199,7 @@
 <div class="option-group">
 <label>🔄 Transition</label>
 <select id="transitionType">
-<option value="fade" selected>Crossfade</option><option value="blur">Blur</option>
+<option value="crossfade" selected>Crossfade</option><option value="blur">Blur</option>
 <option value="crossfade">Crossfade</option><option value="random">Random</option>
 </select>
 </div>
@@ -258,7 +258,7 @@ class UltimateShuffleEngine {
         this.fps = 30;
         this.speed = 1;
         this.shuffleMode = 'fibonacci';
-        this.transitionType = 'fade';
+        this.transitionType = 'crossfade';
         this.transitionSpeed = 400;
         this.segmentCount = 0;
         this.totalFrames = 0;
