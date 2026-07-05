@@ -697,10 +697,10 @@ class UltimateShuffleEngine {
     showDirectionOverlay(direction) {
         const overlay = document.getElementById('directionOverlay');
         if (direction > 0) {
-            overlay.textContent = '▶ FORWARD';
+            overlay.textContent = '';
             overlay.className = 'direction-overlay forward show';
         } else {
-            overlay.textContent = '◀ BACKWARD';
+            overlay.textContent = '';
             overlay.className = 'direction-overlay backward show';
         }
         setTimeout(() => {
