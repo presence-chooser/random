@@ -2,1237 +2,1134 @@
 <html lang="en"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎯 Prime + Bimodal Smooth Shuffle</title>
+    <title>🔥 ZERO DAY + MATHEMATICAL SHUFFLES (SMOOTH BACKWARD)</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: radial-gradient(ellipse at center, #0a0a1a 0%, #000000 100%);
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-            padding: 20px;
-        }
-
-        .player-wrapper {
-            background: linear-gradient(145deg, rgba(20, 20, 40, 0.95), rgba(10, 10, 20, 0.98));
-            backdrop-filter: blur(20px);
-            border-radius: 28px;
-            padding: 24px;
-            box-shadow: 
-                0 40px 100px rgba(0, 0, 0, 0.9),
-                inset 0 1px 0 rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            max-width: 1200px;
-            width: 100%;
-        }
-
-        #videoContainer {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%;
-            background: #000;
-            border-radius: 18px;
-            overflow: hidden;
-            box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.9);
-        }
-
-        #videoPlayer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
-        /* Status Overlay */
-        .stats-overlay {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            right: 20px;
-            z-index: 2;
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 10px;
-            pointer-events: none;
-        }
-
-        .badge-group {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            pointer-events: auto;
-        }
-
-        .badge {
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            color: #fff;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-family: 'Courier New', monospace;
-            transition: all 0.3s ease;
-        }
-
-        .badge.prime-badge {
-            background: rgba(156, 39, 176, 0.25);
-            border-color: rgba(156, 39, 176, 0.4);
-            color: #CE93D8;
-            animation: primeGlow 2.5s ease-in-out infinite;
-        }
-
-        .badge.bimodal-badge {
-            background: rgba(255, 152, 0, 0.2);
-            border-color: rgba(255, 152, 0, 0.3);
-            color: #FFB74D;
-            animation: bimodalGlow 3s ease-in-out infinite;
-        }
-
-        .badge.smooth-badge {
-            background: rgba(76, 175, 80, 0.2);
-            border-color: rgba(76, 175, 80, 0.3);
-            color: #8BC34A;
-            animation: smoothPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes primeGlow {
-            0%, 100% { box-shadow: 0 0 20px rgba(156, 39, 176, 0.1); }
-            50% { box-shadow: 0 0 40px rgba(156, 39, 176, 0.25); }
-        }
-
-        @keyframes bimodalGlow {
-            0%, 100% { box-shadow: 0 0 20px rgba(255, 152, 0, 0.1); }
-            50% { box-shadow: 0 0 40px rgba(255, 152, 0, 0.2); }
-        }
-
-        @keyframes smoothPulse {
-            0%, 100% { box-shadow: 0 0 20px rgba(76, 175, 80, 0.1); }
-            50% { box-shadow: 0 0 40px rgba(76, 175, 80, 0.2); }
-        }
-
-        /* Progress */
-        .progress-container {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 2;
-            padding: 0 12px 8px;
-        }
-
-        .progress-track {
-            width: 100%;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 2px;
-            overflow: hidden;
-            cursor: pointer;
-            transition: height 0.2s ease;
-        }
-
-        .progress-track:hover {
-            height: 6px;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #CE93D8, #FFB74D, #CE93D8, #FFB74D);
-            background-size: 300% 100%;
-            animation: smoothShimmer 4s ease-in-out infinite;
-            width: 0%;
-            transition: width 0.1s linear;
-            border-radius: 2px;
-        }
-
-        @keyframes smoothShimmer {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        /* Controls */
-        .controls-wrapper {
-            margin-top: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
-
-        .controls-row {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .controls-row button {
-            padding: 10px 18px;
-            background: rgba(255, 255, 255, 0.04);
-            color: #ccc;
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 500;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            min-width: 60px;
-            justify-content: center;
-        }
-
-        .controls-row button:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateY(-2px);
-            border-color: rgba(255, 255, 255, 0.12);
-        }
-
-        .controls-row button:active {
-            transform: scale(0.95);
-        }
-
-        .controls-row button.primary {
-            background: linear-gradient(135deg, #7B1FA2, #4A148C);
-            border-color: #7B1FA2;
-            color: white;
-            box-shadow: 0 4px 20px rgba(123, 31, 162, 0.2);
-        }
-
-        .controls-row button.primary:hover {
-            box-shadow: 0 6px 30px rgba(123, 31, 162, 0.3);
-        }
-
-        .controls-row button.primary.active {
-            background: linear-gradient(135deg, #f44336, #d32f2f);
-            border-color: #f44336;
-            box-shadow: 0 4px 20px rgba(244, 67, 54, 0.3);
-        }
-
-        .controls-row button.secondary {
-            background: rgba(255, 152, 0, 0.12);
-            border-color: rgba(255, 152, 0, 0.15);
-            color: #FFB74D;
-        }
-
-        .controls-row button.warning {
-            background: rgba(255, 193, 7, 0.12);
-            border-color: rgba(255, 193, 7, 0.15);
-            color: #FFD54F;
-        }
-
-        .controls-row button.warning.active {
-            background: rgba(255, 193, 7, 0.2);
-            border-color: #FFC107;
-            box-shadow: 0 4px 20px rgba(255, 193, 7, 0.15);
-        }
-
-        .controls-row button.danger {
-            background: rgba(244, 67, 54, 0.12);
-            border-color: rgba(244, 67, 54, 0.15);
-            color: #EF5350;
-        }
-
-        .controls-row button.purple {
-            background: rgba(156, 39, 176, 0.12);
-            border-color: rgba(156, 39, 176, 0.15);
-            color: #CE93D8;
-        }
-
-        /* Options Grid */
-        .options-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
-            padding: 16px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-        }
-
-        .option-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .option-group label {
-            color: #888;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .option-group .control-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .option-group input[type="range"] {
-            flex: 1;
-            height: 4px;
-            -webkit-appearance: none;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
-            outline: none;
-        }
-
-        .option-group input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #7B1FA2, #CE93D8);
-            cursor: pointer;
-            box-shadow: 0 0 20px rgba(123, 31, 162, 0.2);
-            transition: all 0.2s ease;
-        }
-
-        .option-group input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-        }
-
-        .option-group select {
-            padding: 6px 12px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 6px;
-            color: #ccc;
-            font-size: 12px;
-            cursor: pointer;
-            flex: 1;
-            font-family: 'Courier New', monospace;
-        }
-
-        .option-group select:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .option-group select:focus {
-            outline: none;
-            border-color: #7B1FA2;
-        }
-
-        .option-value {
-            min-width: 40px;
-            text-align: center;
-            color: #CE93D8;
-            font-weight: 700;
-            font-size: 14px;
-            font-family: 'Courier New', monospace;
-        }
-
-        /* Info Bar */
-        .info-bar {
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 12px;
-            padding: 12px 16px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            align-items: center;
-        }
-
-        #status {
-            color: #a8d8ea;
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            padding: 4px 12px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 6px;
-            border-left: 3px solid #CE93D8;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        #status.playing {
-            border-left-color: #FFB74D;
-            animation: statusPulse 1.5s ease-in-out infinite;
-        }
-
-        @keyframes statusPulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        .stats-grid {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            color: #666;
-            font-size: 11px;
-            font-family: 'Courier New', monospace;
-            padding: 4px 10px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.04);
-            white-space: nowrap;
-        }
-
-        .stat-item .value {
-            color: #CE93D8;
-            font-weight: 600;
-        }
-
-        .stat-item .value.glow {
-            color: #FFB74D;
-        }
-
-        .stat-item .value.warm {
-            color: #8BC34A;
-        }
-
-        /* Distribution Visualization */
-        .dist-viz {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
-            padding: 12px 14px;
-            background: rgba(0, 0, 0, 0.25);
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            margin-top: 8px;
-        }
-
-        .dist-item {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .dist-item .label {
-            color: #555;
-            font-size: 9px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 600;
-        }
-
-        .dist-bar-container {
-            width: 100%;
-            height: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 4px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .dist-bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #7B1FA2, #CE93D8);
-            border-radius: 4px;
-            transition: width 0.5s ease;
-            width: 0%;
-        }
-
-        .dist-bar-fill.bimodal-1 {
-            background: linear-gradient(90deg, #7B1FA2, #9C27B0);
-        }
-
-        .dist-bar-fill.bimodal-2 {
-            background: linear-gradient(90deg, #FF6F00, #FFB74D);
-        }
-
-        .dist-bar-fill.coverage {
-            background: linear-gradient(90deg, #4CAF50, #8BC34A);
-        }
-
-        /* History */
-        .history-panel {
-            margin-top: 10px;
-            padding: 10px 14px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            max-height: 60px;
-            overflow-y: auto;
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .history-panel::-webkit-scrollbar {
-            height: 4px;
-        }
-
-        .history-panel::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 2px;
-        }
-
-        .history-panel::-webkit-scrollbar-thumb {
-            background: #7B1FA2;
-            border-radius: 2px;
-        }
-
-        .history-chip {
-            padding: 2px 10px;
-            background: rgba(123, 31, 162, 0.15);
-            border: 1px solid rgba(123, 31, 162, 0.2);
-            border-radius: 12px;
-            font-size: 10px;
-            color: #CE93D8;
-            font-family: 'Courier New', monospace;
-            white-space: nowrap;
-            animation: chipIn 0.3s ease;
-        }
-
-        .history-chip.current {
-            background: rgba(255, 152, 0, 0.15);
-            border-color: rgba(255, 152, 0, 0.2);
-            color: #FFB74D;
-        }
-
-        @keyframes chipIn {
-            from { transform: scale(0.8) rotate(-5deg); opacity: 0; }
-            to { transform: scale(1) rotate(0deg); opacity: 1; }
-        }
-
-        .history-label {
-            color: #555;
-            font-size: 10px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        @media (max-width: 768px) {
-            .player-wrapper { padding: 16px; }
-            .controls-row button { padding: 8px 12px; font-size: 11px; min-width: 40px; }
-            .options-grid { grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px; }
-            .info-bar { grid-template-columns: 1fr; }
-            .stats-grid { justify-content: flex-start; }
-            .stat-item { font-size: 10px; padding: 3px 8px; }
-            .stats-overlay { top: 10px; left: 10px; right: 10px; }
-            .badge { font-size: 9px; padding: 4px 10px; }
-            .dist-viz { grid-template-columns: 1fr; }
-        }
-
-        @media (max-width: 480px) {
-            .options-grid { grid-template-columns: 1fr; }
-            .controls-row { gap: 4px; }
-            .controls-row button { padding: 6px 8px; font-size: 10px; min-width: 30px; }
-        }
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{background:radial-gradient(ellipse at center,#0a0a1a 0%,#000 100%);font-family:'Segoe UI',Arial,sans-serif;padding:20px;color:#fff;min-height:100vh;display:flex;justify-content:center;align-items:center}
+        .wrapper{max-width:1200px;width:100%}
+        .glass{background:rgba(255,255,255,.06);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.08);border-radius:28px;padding:24px;box-shadow:0 40px 100px rgba(0,0,0,.8)}
+        #videoContainer{position:relative;width:100%;padding-bottom:56.25%;background:#000;border-radius:18px;overflow:hidden}
+        #videoPlayer{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain}
+        .direction-overlay{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:5;font-size:42px;font-weight:900;pointer-events:none;opacity:0;transition:all .3s ease;text-shadow:0 0 40px rgba(0,0,0,.8),0 0 80px rgba(0,0,0,.6)}
+        .direction-overlay.show{opacity:1;transform:translate(-50%,-50%) scale(1.1)}
+        .direction-overlay.forward{color:#4CAF50}
+        .direction-overlay.backward{color:#f44336}
+        .transition-overlay{position:absolute;top:0;left:0;right:0;bottom:0;z-index:10;pointer-events:none;opacity:0;background:#000;transition:opacity .4s ease}
+        .transition-overlay.active{opacity:1}
+        .stats-overlay{position:absolute;top:15px;left:15px;right:15px;z-index:2;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;pointer-events:none}
+        .badge-group{display:flex;gap:8px;flex-wrap:wrap;pointer-events:auto}
+        .badge{padding:4px 12px;border-radius:16px;font-size:10px;font-weight:600;background:rgba(0,0,0,.85);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.08);color:#fff;display:flex;align-items:center;gap:4px;font-family:'Courier New',monospace}
+        .badge.purple{background:rgba(156,39,176,.25);border-color:rgba(156,39,176,.4);color:#CE93D8}
+        .badge.orange{background:rgba(255,152,0,.2);border-color:rgba(255,152,0,.3);color:#FFB74D}
+        .badge.green{background:rgba(76,175,80,.2);border-color:rgba(76,175,80,.3);color:#8BC34A}
+        .badge.blue{background:rgba(33,150,243,.2);border-color:rgba(33,150,243,.3);color:#64B5F6}
+        .badge.gold{background:rgba(255,200,0,.2);border-color:rgba(255,200,0,.3);color:#FFD54F}
+        .badge.cyan{background:rgba(0,188,212,.2);border-color:rgba(0,188,212,.3);color:#4DD0E1}
+        .badge.pink{background:rgba(233,30,99,.2);border-color:rgba(233,30,99,.3);color:#F06292}
+        .badge.red{background:rgba(244,67,54,.2);border-color:rgba(244,67,54,.3);color:#EF5350}
+        .badge.magenta{background:rgba(255,0,255,.15);border-color:rgba(255,0,255,.2);color:#FF6BFF}
+        .progress-container{position:absolute;bottom:0;left:0;right:0;z-index:2;padding:0 12px 8px}
+        .progress-track{width:100%;height:4px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden;cursor:pointer}
+        .progress-track:hover{height:6px}
+        .progress-fill{height:100%;background:linear-gradient(90deg,#CE93D8,#FFB74D,#64B5F6,#4DD0E1);background-size:300%100%;animation:shimmer 4s ease-in-out infinite;width:0%;transition:width .1s linear;border-radius:2px}
+        @keyframes shimmer{0%,100%{background-position:0%50%}50%{background-position:100%50%}}
+        .controls-wrapper{margin-top:18px;display:flex;flex-direction:column;gap:12px}
+        .row{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+        .row button{padding:8px 14px;background:rgba(255,255,255,.04);color:#ccc;border:1px solid rgba(255,255,255,.06);border-radius:8px;cursor:pointer;font-size:12px;font-weight:500;transition:all .25s;display:flex;align-items:center;gap:5px}
+        .row button:hover{background:rgba(255,255,255,.08);transform:translateY(-2px)}
+        .row button.primary{background:linear-gradient(135deg,#7B1FA2,#4A148C);border-color:#7B1FA2;color:#fff}
+        .row button.primary.active{background:linear-gradient(135deg,#f44336,#d32f2f);border-color:#f44336}
+        .row button.secondary{background:rgba(255,152,0,.12);border-color:rgba(255,152,0,.15);color:#FFB74D}
+        .row button.warning{background:rgba(255,193,7,.12);border-color:rgba(255,193,7,.15);color:#FFD54F}
+        .row button.warning.active{background:rgba(255,193,7,.2);border-color:#FFC107}
+        .row button.danger{background:rgba(244,67,54,.12);border-color:rgba(244,67,54,.15);color:#EF5350}
+        .row button.cyan{background:rgba(0,188,212,.12);border-color:rgba(0,188,212,.15);color:#4DD0E1}
+        .row button.green-btn{background:rgba(76,175,80,.12);border-color:rgba(76,175,80,.15);color:#8BC34A}
+        .row button.green-btn.active{background:rgba(76,175,80,.25);border-color:#4CAF50}
+        .options-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;padding:12px;background:rgba(0,0,0,.3);border-radius:12px;border:1px solid rgba(255,255,255,.04)}
+        .option-group{display:flex;flex-direction:column;gap:3px}
+        .option-group label{color:#888;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+        .option-group .control-row{display:flex;align-items:center;gap:6px}
+        .option-group input[type="range"]{flex:1;height:3px;-webkit-appearance:none;background:rgba(255,255,255,.1);border-radius:2px;outline:none}
+        .option-group input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,#7B1FA2,#CE93D8);cursor:pointer}
+        .option-group select{padding:4px 8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:5px;color:#ccc;font-size:10px;cursor:pointer;flex:1;font-family:'Courier New',monospace}
+        .option-group select:hover{background:rgba(255,255,255,.1)}
+        .option-group select:focus{outline:none;border-color:#7B1FA2}
+        .option-value{min-width:30px;text-align:center;color:#CE93D8;font-weight:700;font-size:12px;font-family:'Courier New',monospace}
+        .info-bar{display:grid;grid-template-columns:1fr auto;gap:8px;padding:8px 12px;background:rgba(0,0,0,.4);border-radius:8px;border:1px solid rgba(255,255,255,.04);align-items:center}
+        #status{color:#a8d8ea;font-family:'Courier New',monospace;font-size:10px;padding:3px 8px;background:rgba(0,0,0,.3);border-radius:4px;border-left:3px solid #CE93D8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+        #status.playing{border-left-color:#FFB74D;animation:pulse 1.5s ease-in-out infinite}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.7}}
+        .stats-grid{display:flex;gap:6px;flex-wrap:wrap}
+        .stat-item{display:flex;align-items:center;gap:2px;color:#666;font-size:9px;font-family:'Courier New',monospace;padding:2px 6px;background:rgba(0,0,0,.3);border-radius:4px;border:1px solid rgba(255,255,255,.04);white-space:nowrap}
+        .stat-item .value{color:#CE93D8;font-weight:600}
+        .stat-item .value.glow{color:#FFB74D}
+        .stat-item .value.warm{color:#8BC34A}
+        .stat-item .value.blue{color:#64B5F6}
+        .stat-item .value.gold{color:#FFD54F}
+        .stat-item .value.cyan{color:#4DD0E1}
+        .stat-item .value.green{color:#8BC34A}
+        .stat-item .value.red{color:#EF5350}
+        .stat-item .value.magenta{color:#FF6BFF}
+        .dist-viz{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:6px;padding:8px 10px;background:rgba(0,0,0,.2);border-radius:8px;border:1px solid rgba(255,255,255,.03)}
+        .dist-item{display:flex;flex-direction:column;gap:2px}
+        .dist-item .label{color:#555;font-size:7px;text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+        .dist-bar-container{width:100%;height:14px;background:rgba(255,255,255,.05);border-radius:3px;overflow:hidden}
+        .dist-bar-fill{height:100%;border-radius:3px;transition:width .5s ease;width:0%}
+        .dist-bar-fill.coverage{background:linear-gradient(90deg,#4CAF50,#8BC34A)}
+        .dist-bar-fill.shuffle{background:linear-gradient(90deg,#2196F3,#64B5F6)}
+        .dist-bar-fill.entropy{background:linear-gradient(90deg,#FFB74D,#FFA726)}
+        .dist-bar-fill.direction{background:linear-gradient(90deg,#f44336,#4CAF50)}
+        .history-panel{margin-top:6px;padding:6px 10px;background:rgba(0,0,0,.2);border-radius:6px;border:1px solid rgba(255,255,255,.03);max-height:40px;overflow-y:auto;display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+        .history-panel::-webkit-scrollbar{height:3px}
+        .history-panel::-webkit-scrollbar-track{background:rgba(255,255,255,.03)}
+        .history-panel::-webkit-scrollbar-thumb{background:#7B1FA2;border-radius:2px}
+        .history-chip{padding:1px 6px;border-radius:8px;font-size:8px;font-family:'Courier New',monospace;white-space:nowrap}
+        .history-chip.current{background:rgba(255,152,0,.15);border:1px solid rgba(255,152,0,.2);color:#FFB74D}
+        .history-chip.forward{background:rgba(76,175,80,.15);border:1px solid rgba(76,175,80,.2);color:#8BC34A}
+        .history-chip.backward{background:rgba(244,67,54,.15);border:1px solid rgba(244,67,54,.2);color:#EF5350}
+        .history-chip.math{background:rgba(255,0,255,.1);border:1px solid rgba(255,0,255,.15);color:#FF6BFF}
+        .history-label{color:#555;font-size:8px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+        @media(max-width:768px){.wrapper{padding:10px}.glass{padding:14px}.options-grid{grid-template-columns:1fr 1fr}}
+        @media(max-width:480px){.options-grid{grid-template-columns:1fr}.row button{padding:5px 8px;font-size:10px}}
     </style>
 </head>
 <body>
-    <div class="player-wrapper">
-        <!-- Video Container -->
-        <div id="videoContainer">
-            <video id="videoPlayer" muted="" src="VID_20240329_021151_HSR_120.mp4"></video>
-            
-            <!-- Stats Overlay -->
-            <div class="stats-overlay">
-                <div class="badge-group">
-                    <div class="badge prime-badge">🔢 PRIME</div>
-                    <div class="badge bimodal-badge">📊 BIMODAL</div>
-                    <div class="badge smooth-badge">✨ SMOOTH</div>
-                    <div class="badge" style="border-color: rgba(255,255,255,0.1);" id="segmentBadge">🎯 5262</div>
-                </div>
-                <div class="badge-group">
-                    <div class="badge" id="fpsBadge">📊 30 FPS</div>
-                    <div class="badge" id="smoothnessBadge">📈 48%</div>
-                </div>
-            </div>
+<div class="wrapper">
+<div class="glass">
+<div id="videoContainer">
+<video id="videoPlayer" muted src="VID_20240329_021151_HSR_120.mp4"></video>
+<div class="direction-overlay" id="directionOverlay">▶</div>
+<div class="transition-overlay" id="transitionOverlay"></div>
+<div class="stats-overlay">
+<div class="badge-group">
+<span class="badge purple">🔥 ZERO DAY</span>
+<span class="badge magenta">📐 MATHEMATICAL</span>
+<span class="badge orange" id="shuffleBadge">🎲 Fibonacci</span>
+<span class="badge green">✨ SMOOTH</span>
+<span class="badge blue">🔀 SHUFFLE</span>
+<span class="badge gold">🔄 TRANSITION</span>
+<span class="badge red" id="dirBadge">↕ DIR</span>
+</div>
+<div class="badge-group">
+<span class="badge cyan" id="fpsBadge">📊 30 FPS</span>
+<span class="badge pink" id="smoothnessBadge">📈 100%</span>
+<span class="badge" id="frameCountBadge" style="border-color:rgba(255,255,255,.1);">📐 30f</span>
+</div>
+</div>
+<div class="progress-container">
+<div class="progress-track" id="progressTrack">
+<div class="progress-fill" id="progressFill"></div>
+</div>
+</div>
+</div>
 
-            <!-- Progress -->
-            <div class="progress-container">
-                <div class="progress-track" id="progressTrack">
-                    <div class="progress-fill" id="progressFill" style="width: 37.2177%;"></div>
-                </div>
-            </div>
-        </div>
+<div class="controls-wrapper">
+<div class="row">
+<button id="toggleBtn" class="primary"><span>▶</span> Play</button>
+<button id="skipBtn" class="secondary"><span>⏭</span> Skip</button>
+<button id="resetBtn" class="danger"><span>⟳</span> Reset</button>
+<button id="loopBtn" class="warning active"><span>🔁</span> Loop</button>
+<button id="muteBtn"><span>🔊</span> Mute</button>
+<button id="historyBtn" class="cyan"><span>📋</span> History</button>
+<button id="dirToggleBtn" class="green-btn active"><span>↕</span> Dir Shuffle</button>
+</div>
 
-        <!-- Controls -->
-        <div class="controls-wrapper">
-            <!-- Main Controls -->
-            <div class="controls-row">
-                <button id="toggleBtn" class="primary active"><span>⏸</span> Pause</button>
-                <button id="skipBtn" class="secondary">
-                    <span>⏭</span> Skip
-                </button>
-                <button id="resetBtn" class="danger">
-                    <span>⟳</span> Reset
-                </button>
-                <button id="loopBtn" class="warning active">
-                    <span>🔁</span> Loop
-                </button>
-                <button id="muteBtn">
-                    <span>🔊</span> Mute
-                </button>
-                <button id="historyBtn" class="purple">
-                    <span>📋</span> History
-                </button>
-            </div>
+<div class="options-grid">
+<div class="option-group">
+<label>📐 Min Frames</label>
+<div class="control-row">
+<input type="range" id="minFrameSlider" min="1" max="90" value="5" step="1">
+<span class="option-value" id="minFrameDisplay">5</span>
+</div>
+</div>
+<div class="option-group">
+<label>📐 Max Frames</label>
+<div class="control-row">
+<input type="range" id="maxFrameSlider" min="5" max="120" value="30" step="1">
+<span class="option-value" id="maxFrameDisplay">30</span>
+</div>
+</div>
+<div class="option-group">
+<label>⚡ Speed</label>
+<select id="speedSelect">
+<option value="0.25">0.25x</option><option value="0.5">0.5x</option>
+<option value="0.75">0.75x</option><option value="1" selected>1x</option>
+<option value="1.5">1.5x</option><option value="2">2x</option><option value="3">3x</option>
+</select>
+</div>
+<div class="option-group">
+<label>🎲 Shuffle Mode</label>
+<select id="shuffleMode">
+<optgroup label="📐 MATHEMATICAL">
+<option value="fibonacci">Fibonacci</option>
+<option value="prime">Prime Numbers</option>
+<option value="pi">Pi Digits</option>
+<option value="euler">Euler's Number</option>
+<option value="golden">Golden Ratio</option>
+<option value="chaos">Chaos Theory</option>
+<option value="mersenne">Mersenne Twister</option>
+<option value="lcg">Linear Congruential</option>
+<option value="lucas">Lucas Numbers</option>
+<option value="collatz">Collatz Conjecture</option>
+<option value="mandelbrot">Mandelbrot Set</option>
+<option value="sierpinski">Sierpinski Triangle</option>
+<option value="pascal">Pascal's Triangle</option>
+<option value="eratosthenes">Eratosthenes Sieve</option>
+</optgroup>
+<optgroup label="⭐ ZERO DAY">
+<option value="chronos">⏳ Chronos</option>
+<option value="nexus">🌀 Nexus</option>
+<option value="paradox">🔀 Paradox</option>
+<option value="echo">📢 Echo</option>
+<option value="ouroboros">🐍 Ouroboros</option>
+<option value="singularity">⚫ Singularity</option>
+<option value="void">🌌 Void</option>
+<option value="prism">🌈 Prism</option>
+<option value="cascade">💧 Cascade</option>
+<option value="mirror">🪞 Mirror</option>
+<option value="photon">💡 Photon</option>
+<option value="gravity">🪐 Gravity</option>
+<option value="quantum_entanglement">🔮 Quantum Entanglement</option>
+<option value="tachyon">⚡ Tachyon</option>
+<option value="brane">🧵 Brane</option>
+</optgroup>
+</select>
+</div>
+<div class="option-group">
+<label>🔄 Transition</label>
+<select id="transitionType">
+<option value="fade" selected>Fade</option><option value="blur">Blur</option>
+<option value="crossfade">Crossfade</option><option value="random">Random</option>
+</select>
+</div>
+<div class="option-group">
+<label>⏱ Transition Speed</label>
+<div class="control-row">
+<input type="range" id="transitionSpeed" min="100" max="1000" value="400" step="50">
+<span class="option-value" id="transitionSpeedDisplay">400ms</span>
+</div>
+</div>
+</div>
 
-            <!-- Options Grid -->
-            <div class="options-grid">
-                <div class="option-group">
-                    <label>🎬 Frames Per Segment</label>
-                    <div class="control-row">
-                        <input type="range" id="frameSlider" min="5" max="90" value="30" step="5">
-                        <span class="option-value" id="frameDisplay">5</span>
-                    </div>
-                </div>
+<div class="dist-viz">
+<div class="dist-item"><span class="label">🎯 Coverage</span><div class="dist-bar-container"><div class="dist-bar-fill coverage" id="coverageBar"></div></div></div>
+<div class="dist-item"><span class="label">🔀 Shuffle</span><div class="dist-bar-container"><div class="dist-bar-fill shuffle" id="shuffleBar"></div></div></div>
+<div class="dist-item"><span class="label">🌀 Entropy</span><div class="dist-bar-container"><div class="dist-bar-fill entropy" id="entropyBar"></div></div></div>
+<div class="dist-item"><span class="label">↕ Direction</span><div class="dist-bar-container"><div class="dist-bar-fill direction" id="dirBar"></div></div></div>
+</div>
 
-                <div class="option-group">
-                    <label>⚡ Speed</label>
-                    <select id="speedSelect">
-                        <option value="0.25">0.25x</option>
-                        <option value="0.5">0.5x</option>
-                        <option value="0.75">0.75x</option>
-                        <option value="1" selected="">1x</option>
-                        <option value="1.5">1.5x</option>
-                        <option value="2">2x</option>
-                        <option value="3">3x</option>
-                    </select>
-                </div>
+<div class="info-bar">
+<span id="status">🔥 Zero Day + Mathematical Shuffles Ready</span>
+<div class="stats-grid">
+<span class="stat-item">⏱ <span class="value" id="timeDisplay">0.00s</span></span>
+<span class="stat-item">🎯 <span class="value glow" id="segmentCount">0</span></span>
+<span class="stat-item">📐 <span class="value blue" id="currentFrames">0f</span></span>
+<span class="stat-item">↕ <span class="value green" id="dirDisplay">→</span></span>
+<span class="stat-item">🌀 <span class="value cyan" id="entropyDisplay">0.00</span></span>
+<span class="stat-item">📈 <span class="value warm" id="progressPercent">0%</span></span>
+</div>
+</div>
 
-                <div class="option-group">
-                    <label>📐 Prime Mode</label>
-                    <select id="primeMode">
-                        <option value="twin">Twin Primes</option>
-                        <option value="cousin">Cousin Primes</option>
-                        <option value="sexy">Sexy Primes</option>
-                        <option value="balanced" selected="">Balanced</option>
-                        <option value="strong">Strong Primes</option>
-                    </select>
-                </div>
+<div class="history-panel" id="historyPanel" style="display:none">
+<span class="history-label">📋 Recent:</span>
+<div id="historyChips"></div>
+</div>
+</div>
+</div>
+</div>
 
-                <div class="option-group">
-                    <label>🎯 Bimodal Balance</label>
-                    <div class="control-row">
-                        <input type="range" id="balanceSlider" min="0" max="100" value="50" step="5">
-                        <span class="option-value" id="balanceDisplay">20%</span>
-                    </div>
-                </div>
-            </div>
+<script>
+// ============================================
+// ZERO DAY + MATHEMATICAL SHUFFLE ENGINE
+// WITH SMOOTH BACKWARD PLAYBACK
+// ============================================
 
-            <!-- Distribution Visualization -->
-            <div class="dist-viz" id="distViz">
-                <div class="dist-item">
-                    <span class="label">📍 Prime Peak 1</span>
-                    <div class="dist-bar-container">
-                        <div class="dist-bar-fill bimodal-1" id="peak1Bar" style="width: 30%;"></div>
-                    </div>
-                </div>
-                <div class="dist-item">
-                    <span class="label">📍 Prime Peak 2</span>
-                    <div class="dist-bar-container">
-                        <div class="dist-bar-fill bimodal-2" id="peak2Bar" style="width: 60%;"></div>
-                    </div>
-                </div>
-                <div class="dist-item">
-                    <span class="label">🎯 Coverage</span>
-                    <div class="dist-bar-container">
-                        <div class="dist-bar-fill coverage" id="coverageBar" style="width: 21.7128%;"></div>
-                    </div>
-                </div>
-                <div class="dist-item">
-                    <span class="label">📊 Smoothness</span>
-                    <div class="dist-bar-container">
-                        <div class="dist-bar-fill" id="smoothnessBar" style="width: 48.2597%; background: linear-gradient(90deg, rgb(76, 175, 80), rgb(139, 195, 74));"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Info Bar -->
-            <div class="info-bar">
-                <span id="status" class="playing">🔢 twin | ⚖️ 20% | Seg 5262: 24.70s (741)</span>
-                <div class="stats-grid">
-                    <span class="stat-item">⏱ <span class="value" id="timeDisplay">24.70s</span></span>
-                    <span class="stat-item">📊 <span class="value" id="frameInfo">741/1990</span></span>
-                    <span class="stat-item">🎯 <span class="value glow" id="segmentCount">5262</span></span>
-                    <span class="stat-item">📈 <span class="value warm" id="progressPercent">37%</span></span>
-                </div>
-            </div>
-
-            <!-- History -->
-            <div class="history-panel" id="historyPanel" style="display: none;">
-                <span class="history-label">📋 Recent:</span>
-                <div id="historyChips"><span class="history-chip current">T 741</span><span class="history-chip">T 717</span><span class="history-chip">T 1555</span><span class="history-chip">T 745</span><span class="history-chip">T 1666</span><span class="history-chip">T 963</span><span class="history-chip">T 870</span><span class="history-chip">T 787</span><span class="history-chip">T 824</span><span class="history-chip">T 1019</span><span class="history-chip">T 894</span><span class="history-chip">T 810</span><span class="history-chip">T 796</span><span class="history-chip">T 755</span><span class="history-chip">T 866</span><span class="history-chip">T 731</span><span class="history-chip">T 890</span><span class="history-chip">T 880</span><span class="history-chip">T 606</span><span class="history-chip">T 1819</span></div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        class PrimeBimodalPlayer {
-            constructor(videoElement) {
-                this.video = videoElement;
-                this.isPlaying = false;
-                this.isLooping = true;
-                this.isMuted = false;
-                this.frameDuration = 30;
-                this.fps = 30;
-                this.speed = 1;
-                this.primeMode = 'balanced';
-                this.bimodalBalance = 0.5;
-                this.segmentCount = 0;
-                this.totalFramesPlayed = 0;
-                this.totalTime = 0;
-                this.timeoutId = null;
-                this.totalFrames = 0;
-                this.history = [];
-                this.maxHistory = 50;
-                this.playedFrames = new Set();
-                this.frameCoverage = new Set();
-                
-                // Prime state
-                this.primeCache = [];
-                this.primeIndex = 0;
-                this.primePairIndex = 0;
-                this.lastPrime = 0;
-                
-                // Bimodal state
-                this.peak1 = 0.3;  // First peak position (30%)
-                this.peak2 = 0.7;  // Second peak position (70%)
-                this.spread = 0.15;
-                
-                // Stats
-                this.frameTimes = [];
-                this.lastFrameTime = performance.now();
-                this.smoothnessScore = 100;
-                this.entropyHistory = [];
-
-                // Load video
-                this.video.src = 'VID_20240329_021151_HSR_120.mp4';
-                this.video.load();
-
-                this.setupEventListeners();
-                this.setupControls();
-                this.generatePrimes(10000);
-                this.updateUI();
-                this.updateVisualizations();
+class UltimateShuffleEngine {
+    constructor(videoElement) {
+        this.video = videoElement;
+        this.isPlaying = false;
+        this.isLooping = true;
+        this.isMuted = false;
+        this.dirShuffleEnabled = true;
+        this.minFrames = 5;
+        this.maxFrames = 30;
+        this.currentFrameDuration = 30;
+        this.fps = 30;
+        this.speed = 1;
+        this.shuffleMode = 'fibonacci';
+        this.transitionType = 'fade';
+        this.transitionSpeed = 400;
+        this.segmentCount = 0;
+        this.totalFrames = 0;
+        this.history = [];
+        this.maxHistory = 30;
+        this.playedFrames = new Set();
+        this.frameCoverage = new Set();
+        this.timeoutId = null;
+        this.transitionTimeoutId = null;
+        this.isTransitioning = false;
+        this.lastFrameTime = performance.now();
+        this.smoothnessScore = 100;
+        this.entropyScore = 0;
+        this.frameTimes = [];
+        this.frameCountHistory = [];
+        this.directionHistory = [];
+        this.currentDirection = 1;
+        this.isBackwardPlaying = false;
+        this.backwardInterval = null;
+        this.backwardStartTime = 0;
+        this.backwardEndTime = 0;
+        
+        // Mathematical state variables
+        this.mathState = {
+            fibIndex: 1,
+            fibPrev: 0,
+            fibCurr: 1,
+            lucasPrev: 2,
+            lucasCurr: 1,
+            collatzNum: 0,
+            mandelbrotIter: 0,
+            sierpinskiLevel: 0,
+            pascalRow: 0,
+            sieveIndex: 0,
+            primeIndex: 0,
+            piIndex: 0,
+            eIndex: 0,
+            goldenSeed: 0.1,
+            chaosState: 0.5,
+            lcgSeed: Date.now() % 2147483647,
+            mersenneSeed: Date.now() % 2147483647
+        };
+        
+        // Zero Day states
+        this.s = {
+            chronosTime: 0,
+            nexusDim: 0,
+            paradoxStack: [],
+            echoBuffer: [],
+            ouroborosPos: 0,
+            singularityDensity: 0,
+            voidState: 0,
+            prismColor: 0,
+            cascadeLevel: 0,
+            mirrorReflection: 0,
+            photonPath: 0,
+            gravityMass: 0,
+            quantumEntanglement: Array.from({length:10}, () => Math.random()),
+            tachyonSpeed: 0,
+            braneDim: 0
+        };
+        
+        this.primeCache = [];
+        this.generatePrimes(10000);
+        
+        this.video.src = '1.mp4';
+        this.video.load();
+        
+        this.setupEventListeners();
+        this.setupControls();
+        this.updateUI();
+    }
+    
+    generatePrimes(limit) {
+        const sieve = new Uint8Array(limit + 1);
+        this.primeCache = [];
+        for (let i = 2; i <= limit; i++) {
+            if (!sieve[i]) {
+                this.primeCache.push(i);
+                for (let j = i * i; j <= limit; j += i) sieve[j] = 1;
             }
-
-            setupEventListeners() {
-                this.video.addEventListener('loadedmetadata', () => {
-                    this.totalFrames = Math.floor(this.video.duration * this.fps);
-                    this.updateUI();
-                    this.updateStatus('✅ Prime+Bimodal engine ready');
-                    this.updateVisualizations();
-                });
-
-                this.video.addEventListener('timeupdate', () => {
-                    this.updateUI();
-                });
-
-                this.video.addEventListener('play', () => {
-                    this.lastFrameTime = performance.now();
-                });
+        }
+    }
+    
+    setupEventListeners() {
+        this.video.addEventListener('loadedmetadata', () => {
+            this.totalFrames = Math.floor(this.video.duration * this.fps);
+            this.updateUI();
+            this.updateStatus('🔥 Zero Day + Mathematical Shuffles Ready');
+        });
+        this.video.addEventListener('timeupdate', () => this.updateUI());
+        this.video.addEventListener('play', () => { this.lastFrameTime = performance.now(); });
+    }
+    
+    setupControls() {
+        document.getElementById('toggleBtn').addEventListener('click', () => this.togglePlay());
+        document.getElementById('skipBtn').addEventListener('click', () => this.skip());
+        document.getElementById('resetBtn').addEventListener('click', () => this.reset());
+        document.getElementById('loopBtn').addEventListener('click', () => this.toggleLoop());
+        document.getElementById('muteBtn').addEventListener('click', () => this.toggleMute());
+        document.getElementById('historyBtn').addEventListener('click', () => this.toggleHistory());
+        document.getElementById('dirToggleBtn').addEventListener('click', () => this.toggleDirShuffle());
+        
+        document.getElementById('minFrameSlider').addEventListener('input', (e) => {
+            this.minFrames = parseInt(e.target.value);
+            if (this.minFrames > this.maxFrames) {
+                this.maxFrames = this.minFrames;
+                document.getElementById('maxFrameSlider').value = this.maxFrames;
+                document.getElementById('maxFrameDisplay').textContent = this.maxFrames;
             }
-
-            setupControls() {
-                document.getElementById('toggleBtn').addEventListener('click', () => this.togglePlay());
-                document.getElementById('skipBtn').addEventListener('click', () => this.skip());
-                document.getElementById('resetBtn').addEventListener('click', () => this.reset());
-                document.getElementById('loopBtn').addEventListener('click', () => this.toggleLoop());
-                document.getElementById('muteBtn').addEventListener('click', () => this.toggleMute());
-                document.getElementById('historyBtn').addEventListener('click', () => this.toggleHistory());
-
-                document.getElementById('frameSlider').addEventListener('input', (e) => {
-                    this.frameDuration = parseInt(e.target.value);
-                    document.getElementById('frameDisplay').textContent = this.frameDuration;
-                    this.updateStatus(`🎬 Frames: ${this.frameDuration}`);
-                });
-
-                document.getElementById('speedSelect').addEventListener('change', (e) => {
-                    this.speed = parseFloat(e.target.value);
-                    this.video.playbackRate = this.speed;
-                    this.updateStatus(`⚡ Speed: ${this.speed}x`);
-                });
-
-                document.getElementById('primeMode').addEventListener('change', (e) => {
-                    this.primeMode = e.target.value;
-                    this.primeIndex = 0;
-                    this.primePairIndex = 0;
-                    this.updateStatus(`🔢 Prime Mode: ${e.target.value}`);
-                    this.updateVisualizations();
-                });
-
-                document.getElementById('balanceSlider').addEventListener('input', (e) => {
-                    this.bimodalBalance = parseInt(e.target.value) / 100;
-                    document.getElementById('balanceDisplay').textContent = `${Math.round(this.bimodalBalance * 100)}%`;
-                    this.updateVisualizations();
-                    this.updateStatus(`⚖️ Balance: ${Math.round(this.bimodalBalance * 100)}%`);
-                });
-
-                document.getElementById('progressTrack').addEventListener('click', (e) => {
-                    const rect = e.currentTarget.getBoundingClientRect();
-                    const percent = (e.clientX - rect.left) / rect.width;
-                    this.video.currentTime = percent * this.video.duration;
-                });
+            document.getElementById('minFrameDisplay').textContent = this.minFrames;
+        });
+        
+        document.getElementById('maxFrameSlider').addEventListener('input', (e) => {
+            this.maxFrames = parseInt(e.target.value);
+            if (this.maxFrames < this.minFrames) {
+                this.minFrames = this.maxFrames;
+                document.getElementById('minFrameSlider').value = this.minFrames;
+                document.getElementById('minFrameDisplay').textContent = this.minFrames;
             }
-
-            // ============ PRIME NUMBER GENERATION ============
-
-            generatePrimes(limit) {
-                const sieve = new Uint8Array(limit + 1);
-                this.primeCache = [];
-                for (let i = 2; i <= limit; i++) {
-                    if (!sieve[i]) {
-                        this.primeCache.push(i);
-                        for (let j = i * i; j <= limit; j += i) {
-                            sieve[j] = 1;
-                        }
-                    }
-                }
-            }
-
-            getPrimePairs() {
-                const pairs = [];
-                const primes = this.primeCache;
+            document.getElementById('maxFrameDisplay').textContent = this.maxFrames;
+        });
+        
+        document.getElementById('speedSelect').addEventListener('change', (e) => {
+            this.speed = parseFloat(e.target.value);
+            this.video.playbackRate = this.speed;
+        });
+        
+        document.getElementById('shuffleMode').addEventListener('change', (e) => {
+            this.shuffleMode = e.target.value;
+            const names = {
+                'fibonacci':'Fibonacci','prime':'Prime Numbers','pi':'Pi Digits','euler':"Euler's Number",
+                'golden':'Golden Ratio','chaos':'Chaos Theory','mersenne':'Mersenne Twister','lcg':'LCG',
+                'lucas':'Lucas Numbers','collatz':'Collatz Conjecture','mandelbrot':'Mandelbrot Set',
+                'sierpinski':'Sierpinski Triangle','pascal':"Pascal's Triangle",'eratosthenes':'Eratosthenes Sieve',
+                'chronos':'Chronos','nexus':'Nexus','paradox':'Paradox','echo':'Echo',
+                'ouroboros':'Ouroboros','singularity':'Singularity','void':'Void','prism':'Prism',
+                'cascade':'Cascade','mirror':'Mirror','photon':'Photon','gravity':'Gravity',
+                'quantum_entanglement':'Quantum Entanglement','tachyon':'Tachyon','brane':'Brane'
+            };
+            document.getElementById('shuffleBadge').textContent = `🎲 ${names[this.shuffleMode] || this.shuffleMode}`;
+            this.updateStatus(`🎲 Mode: ${names[this.shuffleMode] || this.shuffleMode}`);
+            this.resetStates();
+        });
+        
+        document.getElementById('transitionType').addEventListener('change', (e) => {
+            this.transitionType = e.target.value;
+        });
+        
+        document.getElementById('transitionSpeed').addEventListener('input', (e) => {
+            this.transitionSpeed = parseInt(e.target.value);
+            document.getElementById('transitionSpeedDisplay').textContent = `${this.transitionSpeed}ms`;
+        });
+        
+        document.getElementById('progressTrack').addEventListener('click', (e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            this.video.currentTime = percent * this.video.duration;
+        });
+    }
+    
+    resetStates() {
+        this.mathState.fibIndex = 1;
+        this.mathState.fibPrev = 0;
+        this.mathState.fibCurr = 1;
+        this.mathState.lucasPrev = 2;
+        this.mathState.lucasCurr = 1;
+        this.mathState.collatzNum = 0;
+        this.mathState.mandelbrotIter = 0;
+        this.mathState.sierpinskiLevel = 0;
+        this.mathState.pascalRow = 0;
+        this.mathState.sieveIndex = 0;
+        this.mathState.primeIndex = 0;
+        this.mathState.piIndex = 0;
+        this.mathState.eIndex = 0;
+        this.mathState.goldenSeed = 0.1;
+        this.mathState.chaosState = 0.5;
+        this.s.chronosTime = 0;
+        this.s.nexusDim = 0;
+        this.s.paradoxStack = [];
+        this.s.echoBuffer = [];
+        this.s.ouroborosPos = 0;
+        this.s.singularityDensity = 0;
+        this.s.voidState = 0;
+        this.s.prismColor = 0;
+        this.s.cascadeLevel = 0;
+        this.s.mirrorReflection = 0;
+        this.s.photonPath = 0;
+        this.s.gravityMass = 0;
+        this.s.quantumEntanglement = Array.from({length:10}, () => Math.random());
+        this.s.tachyonSpeed = 0;
+        this.s.braneDim = 0;
+    }
+    
+    // ============================================
+    // MATHEMATICAL SHUFFLE ALGORITHMS (14 MODES)
+    // ============================================
+    
+    getMathematicalValue(maxFrame) {
+        const m = this.mathState;
+        let value = 0;
+        
+        switch(this.shuffleMode) {
+            case 'fibonacci':
+                const next = (m.fibPrev + m.fibCurr) % maxFrame;
+                m.fibPrev = m.fibCurr;
+                m.fibCurr = next || 1;
+                value = next / maxFrame;
+                break;
                 
-                switch(this.primeMode) {
-                    case 'twin':
-                        // Twin primes: difference of 2
-                        for (let i = 0; i < primes.length - 1; i++) {
-                            if (primes[i+1] - primes[i] === 2) {
-                                pairs.push([primes[i], primes[i+1]]);
-                            }
-                        }
-                        break;
-                    case 'cousin':
-                        // Cousin primes: difference of 4
-                        for (let i = 0; i < primes.length - 1; i++) {
-                            if (primes[i+1] - primes[i] === 4) {
-                                pairs.push([primes[i], primes[i+1]]);
-                            }
-                        }
-                        break;
-                    case 'sexy':
-                        // Sexy primes: difference of 6
-                        for (let i = 0; i < primes.length - 1; i++) {
-                            if (primes[i+1] - primes[i] === 6) {
-                                pairs.push([primes[i], primes[i+1]]);
-                            }
-                        }
-                        break;
-                    case 'strong':
-                        // Strong primes: > average of neighbors
-                        for (let i = 1; i < primes.length - 1; i++) {
-                            const avg = (primes[i-1] + primes[i+1]) / 2;
-                            if (primes[i] > avg) {
-                                pairs.push([primes[i-1], primes[i]]);
-                            }
-                        }
-                        break;
-                    default:
-                        // Balanced primes
-                        for (let i = 1; i < primes.length - 1; i++) {
-                            const avg = (primes[i-1] + primes[i+1]) / 2;
-                            if (primes[i] === avg) {
-                                pairs.push([primes[i-1], primes[i]]);
-                            }
-                        }
-                }
+            case 'prime':
+                const prime = this.primeCache[m.primeIndex % this.primeCache.length] || 2;
+                m.primeIndex++;
+                value = (prime % maxFrame) / maxFrame;
+                break;
                 
-                return pairs.length > 0 ? pairs : [[primes[0] || 2, primes[1] || 3]];
-            }
-
-            // ============ BIMODAL DISTRIBUTION ============
-
-            getBimodalValue(maxFrame) {
-                // Generate value using bimodal distribution with prime influence
-                const pairs = this.getPrimePairs();
-                if (pairs.length === 0) return Math.floor(Math.random() * maxFrame);
+            case 'pi':
+                const piDigits = '31415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679';
+                const piIdx = m.piIndex % piDigits.length;
+                m.piIndex++;
+                value = parseInt(piDigits[piIdx]) / 10;
+                break;
                 
-                // Use prime pair index
-                const pair = pairs[this.primePairIndex % pairs.length];
-                this.primePairIndex++;
+            case 'euler':
+                const eDigits = '27182818284590452353602874713526624977572470936999595749669676277240766303535475945713821785251664274';
+                const eIdx = m.eIndex % eDigits.length;
+                m.eIndex++;
+                value = parseInt(eDigits[eIdx]) / 10;
+                break;
                 
-                // Use prime values to influence distribution
-                const prime1 = pair[0] % 100;
-                const prime2 = pair[1] % 100;
+            case 'golden':
+                const phi = (1 + Math.sqrt(5)) / 2;
+                m.goldenSeed = (m.goldenSeed + phi) % 1;
+                value = m.goldenSeed;
+                break;
                 
-                // Determine which peak to use based on prime parity and balance
-                const usePeak1 = (prime1 % 2 === 0) ? 
-                    (Math.random() < this.bimodalBalance) : 
-                    (Math.random() > this.bimodalBalance);
+            case 'chaos':
+                const r = 3.99;
+                m.chaosState = r * m.chaosState * (1 - m.chaosState);
+                value = m.chaosState;
+                break;
                 
-                // Generate value around selected peak
-                let value;
-                if (usePeak1) {
-                    // Peak 1: around 30%
-                    value = this.peak1 + (prime1 / 100) * this.spread;
+            case 'mersenne':
+                const ms1 = (m.mersenneSeed * 9301 + 49297) % 233280;
+                const ms2 = (m.mersenneSeed * 48271 + 0) % 2147483647;
+                m.mersenneSeed = (ms1 * ms2) % 2147483647;
+                value = m.mersenneSeed / 2147483647;
+                break;
+                
+            case 'lcg':
+                const a = 1664525, c = 1013904223, mod = 4294967296;
+                m.lcgSeed = (a * m.lcgSeed + c) % mod;
+                value = m.lcgSeed / mod;
+                break;
+                
+            case 'lucas':
+                const lucasNext = m.lucasPrev + m.lucasCurr;
+                m.lucasPrev = m.lucasCurr;
+                m.lucasCurr = lucasNext % maxFrame;
+                value = m.lucasCurr / maxFrame;
+                break;
+                
+            case 'collatz':
+                if (m.collatzNum === 0) m.collatzNum = Math.floor(Math.random() * maxFrame) + 1;
+                if (m.collatzNum % 2 === 0) {
+                    m.collatzNum = m.collatzNum / 2;
                 } else {
-                    // Peak 2: around 70%
-                    value = this.peak2 + (prime2 / 100) * this.spread;
+                    m.collatzNum = 3 * m.collatzNum + 1;
                 }
+                if (m.collatzNum > maxFrame) m.collatzNum = m.collatzNum % maxFrame;
+                if (m.collatzNum === 0) m.collatzNum = 1;
+                value = m.collatzNum / maxFrame;
+                break;
                 
-                // Add some prime-based jitter for smoothness
-                const jitter = ((prime1 + prime2) % 100) / 1000;
-                value += jitter;
+            case 'mandelbrot':
+                const z = 0.5 + 0.5 * Math.sin(m.mandelbrotIter * 0.01);
+                const cVal = 0.3 + 0.3 * Math.cos(m.mandelbrotIter * 0.015);
+                const zNext = z * z + cVal;
+                m.mandelbrotIter++;
+                value = Math.abs(zNext) % 1;
+                break;
                 
-                // Clamp and scale
-                value = Math.max(0, Math.min(1, value));
-                return Math.floor(value * maxFrame);
+            case 'sierpinski':
+                const level = m.sierpinskiLevel % 10;
+                const triangle = (level / 10) * (1 + Math.sin(level * 1.2));
+                m.sierpinskiLevel++;
+                value = triangle % 1;
+                break;
+                
+            case 'pascal':
+                const row = m.pascalRow % 15;
+                const col = Math.floor(Math.random() * (row + 1));
+                const binomial = this.binomial(row, col) % maxFrame;
+                m.pascalRow++;
+                value = binomial / maxFrame;
+                break;
+                
+            case 'eratosthenes':
+                const sieveIdx = m.sieveIndex % this.primeCache.length;
+                const sievePrime = this.primeCache[sieveIdx] || 2;
+                m.sieveIndex++;
+                value = (sievePrime % maxFrame) / maxFrame;
+                break;
+                
+            default:
+                value = Math.random();
+        }
+        
+        return Math.min(1, Math.max(0, value));
+    }
+    
+    binomial(n, k) {
+        if (k === 0 || k === n) return 1;
+        let result = 1;
+        for (let i = 1; i <= k; i++) {
+            result = result * (n - i + 1) / i;
+        }
+        return Math.round(result);
+    }
+    
+    // ============================================
+    // ZERO DAY SHUFFLE ALGORITHMS (15 MODES)
+    // ============================================
+    
+    getZeroDayValue(maxFrame) {
+        const s = this.s;
+        let value = 0;
+        
+        switch(this.shuffleMode) {
+            case 'chronos':
+                s.chronosTime += 0.01;
+                const dilation = 1 / (1 + Math.sin(s.chronosTime) * 0.5);
+                value = (Math.sin(s.chronosTime * dilation * 10) + 1) / 2;
+                break;
+            case 'nexus':
+                s.nexusDim = (s.nexusDim + 0.01) % 1;
+                const dims = [s.nexusDim, (s.nexusDim * 1.618) % 1, (s.nexusDim * 2.718) % 1];
+                value = (dims[0] + dims[1] + dims[2]) / 3;
+                break;
+            case 'paradox':
+                if (s.paradoxStack.length === 0) s.paradoxStack.push(Math.random());
+                const newP = (s.paradoxStack[s.paradoxStack.length - 1] + Math.random()) / 2;
+                s.paradoxStack.push(newP);
+                if (s.paradoxStack.length > 10) s.paradoxStack.shift();
+                value = s.paradoxStack[s.paradoxStack.length - 1];
+                break;
+            case 'echo':
+                const input = Math.random();
+                s.echoBuffer.unshift(input);
+                if (s.echoBuffer.length > 5) s.echoBuffer.pop();
+                const sum = s.echoBuffer.reduce((a, b, i) => a + b * (1 / (i + 1)), 0);
+                value = Math.min(1, sum / 2);
+                break;
+            case 'ouroboros':
+                s.ouroborosPos = (s.ouroborosPos + 0.01) % 1;
+                const snake = Math.sin(s.ouroborosPos * Math.PI * 2);
+                value = (snake + 1) / 2;
+                break;
+            case 'singularity':
+                s.singularityDensity += 0.001;
+                value = 1 - 1 / (1 + s.singularityDensity);
+                break;
+            case 'void':
+                s.voidState = (s.voidState + 0.01) % 1;
+                value = (s.voidState < 0.5) ? 0 : 1;
+                break;
+            case 'prism':
+                s.prismColor = (s.prismColor + 0.01) % 1;
+                const colors = [s.prismColor, (s.prismColor + 0.33) % 1, (s.prismColor + 0.66) % 1];
+                value = (colors[0] + colors[1] + colors[2]) / 3;
+                break;
+            case 'cascade':
+                s.cascadeLevel = (s.cascadeLevel + 0.1) % 1;
+                const cascades = [s.cascadeLevel, s.cascadeLevel * 1.5, s.cascadeLevel * 0.5];
+                value = (cascades[0] + cascades[1] + cascades[2]) / 3;
+                break;
+            case 'mirror':
+                s.mirrorReflection = (s.mirrorReflection + 0.01) % 1;
+                value = 1 - Math.abs(s.mirrorReflection - 0.5) * 2;
+                break;
+            case 'photon':
+                s.photonPath = (s.photonPath + 0.1) % 1;
+                const wave = Math.sin(s.photonPath * Math.PI * 2);
+                value = (wave + 1) / 2;
+                break;
+            case 'gravity':
+                s.gravityMass += 0.001;
+                const field = 1 - 1 / (1 + s.gravityMass * 2);
+                value = (field * Math.sin(s.gravityMass * 10) + 1) / 2;
+                break;
+            case 'quantum_entanglement':
+                const idx = Math.floor(Math.random() * s.quantumEntanglement.length);
+                const partner = (idx + 1) % s.quantumEntanglement.length;
+                const temp = s.quantumEntanglement[idx];
+                s.quantumEntanglement[idx] = s.quantumEntanglement[partner];
+                s.quantumEntanglement[partner] = temp;
+                value = s.quantumEntanglement.reduce((a, b) => a + b, 0) / s.quantumEntanglement.length;
+                break;
+            case 'tachyon':
+                s.tachyonSpeed = (s.tachyonSpeed + 0.01) % 1;
+                const tachyons = [s.tachyonSpeed, (s.tachyonSpeed * 2) % 1, (s.tachyonSpeed * 3) % 1];
+                value = (tachyons[0] + tachyons[1] + tachyons[2]) / 3;
+                break;
+            case 'brane':
+                s.braneDim = (s.braneDim + 0.01) % 1;
+                const branes = [s.braneDim, (s.braneDim * 1.5) % 1, (s.braneDim * 2.5) % 1];
+                value = (branes[0] + branes[1] + branes[2]) / 3;
+                break;
+            default:
+                value = Math.random();
+        }
+        return Math.min(1, Math.max(0, value));
+    }
+    
+    // ============================================
+    // MAIN SHUFFLE ENGINE
+    // ============================================
+    
+    getShuffleValue(maxFrame) {
+        const mathModes = ['fibonacci','prime','pi','euler','golden','chaos','mersenne','lcg','lucas','collatz','mandelbrot','sierpinski','pascal','eratosthenes'];
+        const zeroDayModes = ['chronos','nexus','paradox','echo','ouroboros','singularity','void','prism','cascade','mirror','photon','gravity','quantum_entanglement','tachyon','brane'];
+        
+        if (mathModes.includes(this.shuffleMode)) {
+            return this.getMathematicalValue(maxFrame);
+        } else if (zeroDayModes.includes(this.shuffleMode)) {
+            return this.getZeroDayValue(maxFrame);
+        }
+        return Math.random();
+    }
+    
+    getRandomDirection() {
+        if (!this.dirShuffleEnabled) return 1;
+        return Math.random() < 0.5 ? 1 : -1;
+    }
+    
+    showDirectionOverlay(direction) {
+        const overlay = document.getElementById('directionOverlay');
+        if (direction > 0) {
+            overlay.textContent = '▶ FORWARD';
+            overlay.className = 'direction-overlay forward show';
+        } else {
+            overlay.textContent = '◀ BACKWARD';
+            overlay.className = 'direction-overlay backward show';
+        }
+        setTimeout(() => {
+            overlay.classList.remove('show');
+        }, 800);
+    }
+    
+    getRandomFrameCount() {
+        const shuffleVal = this.getShuffleValue(this.maxFrames - this.minFrames + 1);
+        return Math.floor(shuffleVal * (this.maxFrames - this.minFrames + 1)) + this.minFrames;
+    }
+    
+    getShuffleTime() {
+        this.currentFrameDuration = this.getRandomFrameCount();
+        this.frameCountHistory.push(this.currentFrameDuration);
+        if (this.frameCountHistory.length > 50) this.frameCountHistory.shift();
+        
+        const maxStartFrame = Math.max(1, this.totalFrames - this.currentFrameDuration);
+        if (maxStartFrame <= 0) return 0;
+        
+        const shuffleVal = this.getShuffleValue(maxStartFrame);
+        let frame = Math.floor(shuffleVal * maxStartFrame);
+        let attempts = 0;
+        
+        while (attempts < 30) {
+            const recent = this.history.slice(0, 5).map(h => h.frame);
+            const tooClose = recent.some(f => Math.abs(f - frame) < this.currentFrameDuration * 0.3);
+            if (!tooClose && !this.playedFrames.has(frame)) break;
+            const newShuffle = this.getShuffleValue(maxStartFrame);
+            frame = Math.floor(newShuffle * maxStartFrame);
+            attempts++;
+        }
+        
+        if (attempts >= 30 && this.playedFrames.size > 0) {
+            this.playedFrames.clear();
+            const recent = this.history.slice(0, 3).map(h => h.frame);
+            recent.forEach(f => this.playedFrames.add(f));
+            const newShuffle = this.getShuffleValue(maxStartFrame);
+            frame = Math.floor(newShuffle * maxStartFrame);
+        }
+        
+        this.playedFrames.add(frame);
+        this.frameCoverage.add(frame);
+        this.calculateSmoothness();
+        return frame / this.fps;
+    }
+    
+    calculateSmoothness() {
+        if (this.history.length < 3) { this.smoothnessScore = 100; return; }
+        const gaps = [];
+        for (let i = 1; i < this.history.length; i++) {
+            gaps.push(Math.abs(this.history[i-1].frame - this.history[i].frame));
+        }
+        if (gaps.length === 0) { this.smoothnessScore = 100; return; }
+        const avgGap = gaps.reduce((a, b) => a + b, 0) / gaps.length;
+        const variance = gaps.reduce((a, b) => a + Math.pow(b - avgGap, 2), 0) / gaps.length;
+        const stdDev = Math.sqrt(variance);
+        const maxStdDev = this.totalFrames / 4;
+        const normalized = Math.min(1, stdDev / maxStdDev);
+        this.smoothnessScore = Math.max(0, 100 - normalized * 80);
+        
+        if (this.history.length > 10) {
+            const bins = 20;
+            const hist = new Array(bins).fill(0);
+            this.history.slice(0, 20).forEach(h => {
+                const bin = Math.floor((h.frame / this.totalFrames) * bins);
+                if (bin < bins) hist[bin]++;
+            });
+            let entropy = 0;
+            const total = this.history.slice(0, 20).length;
+            hist.forEach(count => {
+                if (count > 0) { const p = count / total; entropy -= p * Math.log2(p); }
+            });
+            const maxEntropy = Math.log2(bins);
+            this.entropyScore = (entropy / maxEntropy) * 100;
+        }
+    }
+    
+    applyTransition(callback) {
+        if (this.isTransitioning) { if (callback) callback(); return; }
+        this.isTransitioning = true;
+        const overlay = document.getElementById('transitionOverlay');
+        const types = ['fade', 'blur', 'crossfade'];
+        let type = this.transitionType === 'random' ? types[Math.floor(Math.random() * 3)] : this.transitionType;
+        
+        overlay.className = 'transition-overlay';
+        if (type === 'fade') overlay.style.background = '#000';
+        else if (type === 'blur') overlay.style.backdropFilter = 'blur(0px)';
+        else if (type === 'crossfade') overlay.style.background = 'rgba(0,0,0,0)';
+        
+        overlay.style.transition = `opacity ${this.transitionSpeed}ms ease, backdrop-filter ${this.transitionSpeed}ms ease`;
+        requestAnimationFrame(() => overlay.classList.add('active'));
+        
+        setTimeout(() => { if (callback) callback(); }, this.transitionSpeed / 2);
+        if (this.transitionTimeoutId) clearTimeout(this.transitionTimeoutId);
+        this.transitionTimeoutId = setTimeout(() => {
+            overlay.classList.remove('active');
+            overlay.style.backdropFilter = 'blur(0px)';
+            setTimeout(() => { this.isTransitioning = false; }, 50);
+        }, this.transitionSpeed + 50);
+    }
+    
+    // ============================================
+    // SMOOTH BACKWARD PLAYBACK USING TIMEUPDATE
+    // ============================================
+    
+    playBackwardSegment(startTime, duration, callback) {
+        const endTime = startTime + duration;
+        this.backwardStartTime = startTime;
+        this.backwardEndTime = endTime;
+        
+        // Seek to end of segment
+        this.video.currentTime = endTime;
+        this.video.playbackRate = 1;
+        this.video.play();
+        this.isBackwardPlaying = true;
+        
+        // Use timeupdate event to step backward smoothly
+        const step = 1 / this.fps;
+        const interval = step * 1000 / this.speed;
+        let current = endTime;
+        
+        if (this.backwardInterval) clearInterval(this.backwardInterval);
+        
+        this.backwardInterval = setInterval(() => {
+            if (!this.isBackwardPlaying || !this.isPlaying) {
+                clearInterval(this.backwardInterval);
+                this.backwardInterval = null;
+                return;
             }
-
-            // ============ SMOOTH RANDOM GENERATOR ============
-
-            getSmoothShuffleTime() {
-                const maxStartFrame = Math.max(1, this.totalFrames - this.frameDuration);
-                if (maxStartFrame <= 0) return 0;
-
-                let frame = this.getBimodalValue(maxStartFrame);
-                let attempts = 0;
-                
-                // Ensure we don't repeat too closely
-                while (attempts < 50) {
-                    const recentFrames = this.history.slice(0, 5).map(h => h.frame);
-                    const tooClose = recentFrames.some(f => Math.abs(f - frame) < this.frameDuration * 0.5);
-                    
-                    if (!tooClose && !this.playedFrames.has(frame)) {
-                        break;
-                    }
-                    
-                    frame = this.getBimodalValue(maxStartFrame);
-                    attempts++;
-                }
-                
-                // If we couldn't find a good frame, reset played set
-                if (attempts >= 50 && this.playedFrames.size > 0) {
-                    this.playedFrames.clear();
-                    const recent = this.history.slice(0, 5).map(h => h.frame);
-                    recent.forEach(f => this.playedFrames.add(f));
-                    frame = this.getBimodalValue(maxStartFrame);
-                }
-                
-                const frameTime = frame / this.fps;
-                this.playedFrames.add(frame);
-                this.frameCoverage.add(frame);
-                
-                // Calculate smoothness
-                this.calculateSmoothness();
-                
-                return frameTime;
-            }
-
-            // ============ SMOOTHNESS CALCULATION ============
-
-            calculateSmoothness() {
-                if (this.history.length < 3) {
-                    this.smoothnessScore = 100;
-                    return;
-                }
-                
-                // Calculate variance of gaps between segments
-                const gaps = [];
-                for (let i = 1; i < this.history.length; i++) {
-                    gaps.push(Math.abs(this.history[i-1].frame - this.history[i].frame));
-                }
-                
-                if (gaps.length === 0) {
-                    this.smoothnessScore = 100;
-                    return;
-                }
-                
-                const avgGap = gaps.reduce((a, b) => a + b, 0) / gaps.length;
-                const variance = gaps.reduce((a, b) => a + Math.pow(b - avgGap, 2), 0) / gaps.length;
-                const stdDev = Math.sqrt(variance);
-                
-                // Normalize: lower stdDev = smoother
-                const maxStdDev = this.totalFrames / 4;
-                const normalized = Math.min(1, stdDev / maxStdDev);
-                this.smoothnessScore = Math.max(0, 100 - normalized * 80);
-                
-                // Calculate entropy for additional smoothness metric
-                if (this.history.length > 10) {
-                    const bins = 20;
-                    const hist = new Array(bins).fill(0);
-                    this.history.slice(0, 20).forEach(h => {
-                        const bin = Math.floor((h.frame / this.totalFrames) * bins);
-                        if (bin < bins) hist[bin]++;
-                    });
-                    
-                    let entropy = 0;
-                    const total = this.history.slice(0, 20).length;
-                    hist.forEach(count => {
-                        if (count > 0) {
-                            const p = count / total;
-                            entropy -= p * Math.log2(p);
-                        }
-                    });
-                    
-                    const maxEntropy = Math.log2(bins);
-                    const entropyNorm = entropy / maxEntropy;
-                    
-                    // Combine smoothness metrics
-                    this.smoothnessScore = (this.smoothnessScore * 0.6 + (entropyNorm * 100) * 0.4);
-                }
-            }
-
-            // ============ PLAYER LOGIC ============
-
-            playRandomSegment() {
-                if (!this.video.duration || !this.isPlaying) return;
-
-                if (this.timeoutId) {
-                    clearTimeout(this.timeoutId);
-                    this.timeoutId = null;
-                }
-
+            
+            current -= step;
+            if (current <= startTime) {
+                clearInterval(this.backwardInterval);
+                this.backwardInterval = null;
+                this.isBackwardPlaying = false;
                 this.video.pause();
-
-                const startTime = this.getSmoothShuffleTime();
-                const frameTime = Math.floor(startTime * this.fps);
+                if (callback) callback();
+                return;
+            }
+            this.video.currentTime = current;
+        }, interval);
+        
+        // Update stats
+        this.segmentCount++;
+        const now = performance.now();
+        if (this.lastFrameTime > 0) {
+            const delta = now - this.lastFrameTime;
+            this.frameTimes.push(1000 / delta);
+            if (this.frameTimes.length > 50) this.frameTimes.shift();
+        }
+        this.lastFrameTime = now;
+        
+        this.addHistory(startTime, Math.floor(startTime * this.fps));
+        const modeName = document.getElementById('shuffleMode').selectedOptions[0].text;
+        this.updateStatus(`🔥 ${modeName} ← BACKWARD | Seg ${this.segmentCount}: ${startTime.toFixed(2)}s (${this.currentFrameDuration}f)`);
+        this.updateUI();
+    }
+    
+    // ============================================
+    // PLAY RANDOM SEGMENT
+    // ============================================
+    
+    playRandomSegment() {
+        if (!this.video.duration || !this.isPlaying) return;
+        if (this.timeoutId) clearTimeout(this.timeoutId);
+        
+        this.currentDirection = this.getRandomDirection();
+        const dirText = this.currentDirection > 0 ? '→ FORWARD' : '← BACKWARD';
+        document.getElementById('dirDisplay').textContent = this.currentDirection > 0 ? '→' : '←';
+        document.getElementById('dirDisplay').className = 'value ' + (this.currentDirection > 0 ? 'green' : 'red');
+        document.getElementById('dirBadge').textContent = this.currentDirection > 0 ? '→ FORWARD' : '← BACKWARD';
+        document.getElementById('dirBadge').className = 'badge ' + (this.currentDirection > 0 ? 'green' : 'red');
+        
+        this.showDirectionOverlay(this.currentDirection);
+        
+        const startTime = this.getShuffleTime();
+        const frameTime = Math.floor(startTime * this.fps);
+        const duration = this.currentFrameDuration / this.fps;
+        
+        this.applyTransition(() => {
+            if (this.currentDirection > 0) {
+                // FORWARD - normal play
                 this.video.currentTime = startTime;
-
-                const duration = this.frameDuration / this.fps;
-                const endTime = startTime + duration;
-
+                this.video.playbackRate = this.speed;
+                this.video.play();
+                
                 this.segmentCount++;
-                this.totalFramesPlayed += this.frameDuration;
-                this.totalTime += duration;
-
-                // Measure FPS
                 const now = performance.now();
                 if (this.lastFrameTime > 0) {
                     const delta = now - this.lastFrameTime;
                     this.frameTimes.push(1000 / delta);
-                    if (this.frameTimes.length > 100) this.frameTimes.shift();
+                    if (this.frameTimes.length > 50) this.frameTimes.shift();
                 }
                 this.lastFrameTime = now;
-
-                // Add to history
-                this.addHistory(startTime, endTime, frameTime);
-
-                const primeMode = document.getElementById('primeMode').value;
-                const balance = Math.round(this.bimodalBalance * 100);
-                this.updateStatus(`🔢 ${primeMode} | ⚖️ ${balance}% | Seg ${this.segmentCount}: ${startTime.toFixed(2)}s (${frameTime})`);
+                
+                this.addHistory(startTime, frameTime);
+                const modeName = document.getElementById('shuffleMode').selectedOptions[0].text;
+                this.updateStatus(`🔥 ${modeName} → FORWARD | Seg ${this.segmentCount}: ${startTime.toFixed(2)}s (${this.currentFrameDuration}f)`);
                 this.updateUI();
-                this.updateVisualizations();
-
-                this.video.playbackRate = this.speed;
                 this.video.play();
-
-                this.timeoutId = setTimeout(() => {
-                    this.video.pause();
+            } else {
+                // BACKWARD - smooth reverse playback
+                this.playBackwardSegment(startTime, duration, () => {
                     if (this.isPlaying) {
                         this.playRandomSegment();
                     }
-                }, (duration * 1000) / this.speed);
-            }
-
-            addHistory(startTime, endTime, frame) {
-                this.history.unshift({
-                    start: startTime,
-                    end: endTime,
-                    frame: frame,
-                    primeMode: this.primeMode,
-                    balance: this.bimodalBalance
                 });
-
-                if (this.history.length > this.maxHistory) {
-                    this.history.pop();
-                }
-
-                this.updateHistoryUI();
+                return;
             }
-
-            togglePlay() {
-                this.isPlaying = !this.isPlaying;
-                const btn = document.getElementById('toggleBtn');
-
+        });
+        
+        if (this.currentDirection > 0) {
+            const totalDuration = (duration * 1000) / this.speed;
+            this.timeoutId = setTimeout(() => {
                 if (this.isPlaying) {
-                    btn.innerHTML = '<span>⏸</span> Pause';
-                    btn.classList.add('active');
-                    document.getElementById('status').classList.add('playing');
-                    this.lastFrameTime = performance.now();
-                    this.playRandomSegment();
-                } else {
-                    btn.innerHTML = '<span>▶</span> Play';
-                    btn.classList.remove('active');
-                    document.getElementById('status').classList.remove('playing');
-                    if (this.timeoutId) {
-                        clearTimeout(this.timeoutId);
-                        this.timeoutId = null;
-                    }
-                    this.video.pause();
-                    this.updateStatus('⏸ Paused');
-                }
-            }
-
-            skip() {
-                if (!this.isPlaying) {
-                    this.isPlaying = true;
-                    const btn = document.getElementById('toggleBtn');
-                    btn.innerHTML = '<span>⏸</span> Pause';
-                    btn.classList.add('active');
-                    document.getElementById('status').classList.add('playing');
-                    this.lastFrameTime = performance.now();
-                    this.playRandomSegment();
-                } else {
-                    if (this.timeoutId) {
-                        clearTimeout(this.timeoutId);
-                        this.timeoutId = null;
-                    }
-                    this.video.pause();
                     this.playRandomSegment();
                 }
-            }
-
-            reset() {
-                this.isPlaying = false;
-                this.segmentCount = 0;
-                this.totalFramesPlayed = 0;
-                this.totalTime = 0;
-                this.history = [];
-                this.playedFrames = new Set();
-                this.frameCoverage = new Set();
-                this.frameTimes = [];
-                this.primeIndex = 0;
-                this.primePairIndex = 0;
-                this.smoothnessScore = 100;
-
-                if (this.timeoutId) {
-                    clearTimeout(this.timeoutId);
-                    this.timeoutId = null;
-                }
-
-                this.video.pause();
-                this.video.currentTime = 0;
-
-                const btn = document.getElementById('toggleBtn');
-                btn.innerHTML = '<span>▶</span> Play';
-                btn.classList.remove('active');
-                document.getElementById('status').classList.remove('playing');
-
-                this.updateStatus('⟳ Reset complete');
-                this.updateUI();
-                this.updateHistoryUI();
-                this.updateVisualizations();
-            }
-
-            toggleLoop() {
-                this.isLooping = !this.isLooping;
-                const btn = document.getElementById('loopBtn');
-                if (this.isLooping) {
-                    btn.classList.add('active');
-                    this.updateStatus('🔁 Loop ON');
-                } else {
-                    btn.classList.remove('active');
-                    this.updateStatus('🔁 Loop OFF');
-                }
-            }
-
-            toggleMute() {
-                this.isMuted = !this.isMuted;
-                this.video.muted = this.isMuted;
-                const btn = document.getElementById('muteBtn');
-                btn.innerHTML = this.isMuted ? '<span>🔇</span> Unmute' : '<span>🔊</span> Mute';
-            }
-
-            toggleHistory() {
-                const panel = document.getElementById('historyPanel');
-                const btn = document.getElementById('historyBtn');
-                if (panel.style.display === 'none') {
-                    panel.style.display = 'flex';
-                    btn.classList.add('active');
-                    this.updateHistoryUI();
-                } else {
-                    panel.style.display = 'none';
-                    btn.classList.remove('active');
-                }
-            }
-
-            updateStatus(message) {
-                document.getElementById('status').textContent = message;
-            }
-
-            updateUI() {
-                document.getElementById('timeDisplay').textContent = `${this.video.currentTime.toFixed(2)}s`;
-                const currentFrame = Math.floor(this.video.currentTime * this.fps);
-                document.getElementById('frameInfo').textContent = `${currentFrame}/${this.totalFrames}`;
-                document.getElementById('segmentCount').textContent = this.segmentCount;
-                document.getElementById('segmentBadge').textContent = `🎯 ${this.segmentCount}`;
-                
-                const progress = this.video.duration ? (this.video.currentTime / this.video.duration * 100) : 0;
-                document.getElementById('progressFill').style.width = `${progress}%`;
-                document.getElementById('progressPercent').textContent = `${Math.round(progress)}%`;
-                document.getElementById('fpsBadge').textContent = `📊 ${this.fps} FPS`;
-                document.getElementById('smoothnessBadge').textContent = `📈 ${Math.round(this.smoothnessScore)}%`;
-            }
-
-            updateVisualizations() {
-                // Update peak bars based on balance
-                const peak1Width = 20 + (this.bimodalBalance * 50);
-                const peak2Width = 20 + ((1 - this.bimodalBalance) * 50);
-                document.getElementById('peak1Bar').style.width = `${peak1Width}%`;
-                document.getElementById('peak2Bar').style.width = `${peak2Width}%`;
-
-                // Coverage
-                const coverage = this.totalFrames > 0 ? 
-                    (this.frameCoverage.size / Math.max(1, this.totalFrames - this.frameDuration) * 100) : 0;
-                document.getElementById('coverageBar').style.width = `${Math.min(100, coverage)}%`;
-
-                // Smoothness
-                document.getElementById('smoothnessBar').style.width = `${this.smoothnessScore}%`;
-            }
-
-            updateHistoryUI() {
-                const container = document.getElementById('historyChips');
-                container.innerHTML = '';
-                
-                this.history.slice(0, 20).forEach((h, index) => {
-                    const chip = document.createElement('span');
-                    chip.className = 'history-chip';
-                    if (index === 0) chip.classList.add('current');
-                    const modeMap = {
-                        'twin': 'T',
-                        'cousin': 'C',
-                        'sexy': 'S',
-                        'balanced': 'B',
-                        'strong': 'St'
-                    };
-                    chip.textContent = `${modeMap[h.primeMode]||'?'} ${h.frame}`;
-                    container.appendChild(chip);
-                });
-
-                if (this.history.length === 0) {
-                    const empty = document.createElement('span');
-                    empty.style.color = '#444';
-                    empty.style.fontSize = '11px';
-                    empty.textContent = 'No segments played yet';
-                    container.appendChild(empty);
-                }
-            }
+            }, totalDuration + 100);
         }
+    }
+    
+    addHistory(startTime, frame) {
+        const isMath = ['fibonacci','prime','pi','euler','golden','chaos','mersenne','lcg','lucas','collatz','mandelbrot','sierpinski','pascal','eratosthenes'].includes(this.shuffleMode);
+        this.history.unshift({
+            start: startTime,
+            frame: frame,
+            frameCount: this.currentFrameDuration,
+            shuffleMode: this.shuffleMode,
+            direction: this.currentDirection,
+            isMath: isMath
+        });
+        this.directionHistory.push(this.currentDirection);
+        if (this.directionHistory.length > 100) this.directionHistory.shift();
+        if (this.history.length > this.maxHistory) this.history.pop();
+        this.updateHistoryUI();
+    }
+    
+    togglePlay() {
+        this.isPlaying = !this.isPlaying;
+        const btn = document.getElementById('toggleBtn');
+        if (this.isPlaying) {
+            btn.innerHTML = '<span>⏸</span> Pause';
+            btn.classList.add('active');
+            document.getElementById('status').classList.add('playing');
+            this.lastFrameTime = performance.now();
+            this.video.play();
+            this.playRandomSegment();
+        } else {
+            btn.innerHTML = '<span>▶</span> Play';
+            btn.classList.remove('active');
+            document.getElementById('status').classList.remove('playing');
+            if (this.timeoutId) clearTimeout(this.timeoutId);
+            if (this.transitionTimeoutId) clearTimeout(this.transitionTimeoutId);
+            if (this.backwardInterval) {
+                clearInterval(this.backwardInterval);
+                this.backwardInterval = null;
+                this.isBackwardPlaying = false;
+            }
+            this.video.pause();
+            this.video.playbackRate = this.speed;
+            this.updateStatus('⏸ Paused');
+        }
+    }
+    
+    skip() {
+        if (!this.isPlaying) {
+            this.isPlaying = true;
+            const btn = document.getElementById('toggleBtn');
+            btn.innerHTML = '<span>⏸</span> Pause';
+            btn.classList.add('active');
+            document.getElementById('status').classList.add('playing');
+            this.lastFrameTime = performance.now();
+            this.video.play();
+            this.playRandomSegment();
+        } else {
+            if (this.timeoutId) clearTimeout(this.timeoutId);
+            if (this.backwardInterval) {
+                clearInterval(this.backwardInterval);
+                this.backwardInterval = null;
+                this.isBackwardPlaying = false;
+            }
+            this.video.pause();
+            this.video.playbackRate = this.speed;
+            this.playRandomSegment();
+        }
+    }
+    
+    reset() {
+        this.isPlaying = false;
+        this.segmentCount = 0;
+        this.history = [];
+        this.playedFrames = new Set();
+        this.frameCoverage = new Set();
+        this.frameTimes = [];
+        this.frameCountHistory = [];
+        this.directionHistory = [];
+        this.smoothnessScore = 100;
+        this.entropyScore = 0;
+        this.currentFrameDuration = 30;
+        this.isTransitioning = false;
+        this.currentDirection = 1;
+        this.isBackwardPlaying = false;
+        this.resetStates();
+        
+        if (this.timeoutId) clearTimeout(this.timeoutId);
+        if (this.transitionTimeoutId) clearTimeout(this.transitionTimeoutId);
+        if (this.backwardInterval) {
+            clearInterval(this.backwardInterval);
+            this.backwardInterval = null;
+        }
+        
+        const overlay = document.getElementById('transitionOverlay');
+        overlay.className = 'transition-overlay';
+        overlay.classList.remove('active');
+        
+        this.video.pause();
+        this.video.currentTime = 0;
+        this.video.playbackRate = this.speed;
+        
+        const btn = document.getElementById('toggleBtn');
+        btn.innerHTML = '<span>▶</span> Play';
+        btn.classList.remove('active');
+        document.getElementById('status').classList.remove('playing');
+        document.getElementById('dirDisplay').textContent = '→';
+        document.getElementById('dirDisplay').className = 'value green';
+        document.getElementById('dirBadge').textContent = '→ FORWARD';
+        document.getElementById('dirBadge').className = 'badge green';
+        
+        this.updateStatus('⟳ Reset complete');
+        this.updateUI();
+        this.updateHistoryUI();
+    }
+    
+    toggleLoop() {
+        this.isLooping = !this.isLooping;
+        document.getElementById('loopBtn').classList.toggle('active');
+        this.updateStatus(`🔁 Loop ${this.isLooping ? 'ON' : 'OFF'}`);
+    }
+    
+    toggleMute() {
+        this.isMuted = !this.isMuted;
+        this.video.muted = this.isMuted;
+        document.getElementById('muteBtn').innerHTML = this.isMuted ? '<span>🔇</span> Unmute' : '<span>🔊</span> Mute';
+    }
+    
+    toggleHistory() {
+        const panel = document.getElementById('historyPanel');
+        const btn = document.getElementById('historyBtn');
+        if (panel.style.display === 'none') {
+            panel.style.display = 'flex';
+            btn.classList.add('active');
+            this.updateHistoryUI();
+        } else {
+            panel.style.display = 'none';
+            btn.classList.remove('active');
+        }
+    }
+    
+    toggleDirShuffle() {
+        this.dirShuffleEnabled = !this.dirShuffleEnabled;
+        document.getElementById('dirToggleBtn').classList.toggle('active');
+        this.updateStatus(`↕ Direction Shuffle ${this.dirShuffleEnabled ? 'ON' : 'OFF'}`);
+    }
+    
+    updateStatus(message) { document.getElementById('status').textContent = message; }
+    
+    updateUI() {
+        document.getElementById('timeDisplay').textContent = `${this.video.currentTime.toFixed(2)}s`;
+        document.getElementById('segmentCount').textContent = this.segmentCount;
+        document.getElementById('currentFrames').textContent = `${this.currentFrameDuration}f`;
+        const progress = this.video.duration ? (this.video.currentTime / this.video.duration * 100) : 0;
+        document.getElementById('progressFill').style.width = `${progress}%`;
+        document.getElementById('progressPercent').textContent = `${Math.round(progress)}%`;
+        document.getElementById('fpsBadge').textContent = `📊 ${this.fps} FPS`;
+        document.getElementById('smoothnessBadge').textContent = `📈 ${Math.round(this.smoothnessScore)}%`;
+        document.getElementById('frameCountBadge').textContent = `📐 ${this.currentFrameDuration}f`;
+        document.getElementById('entropyDisplay').textContent = this.entropyScore.toFixed(2);
+        document.getElementById('entropyBar').style.width = `${Math.min(100, this.entropyScore)}%`;
+        const coverage = this.totalFrames > 0 ? (this.frameCoverage.size / Math.max(1, this.totalFrames) * 100) : 0;
+        document.getElementById('coverageBar').style.width = `${Math.min(100, coverage)}%`;
+        if (this.frameCountHistory.length > 0) {
+            const avg = this.frameCountHistory.reduce((a, b) => a + b, 0) / this.frameCountHistory.length;
+            const variety = Math.min(100, (avg / this.maxFrames) * 100);
+            document.getElementById('shuffleBar').style.width = `${variety}%`;
+        }
+        const totalDir = this.directionHistory.length;
+        if (totalDir > 0) {
+            const forwardCount = this.directionHistory.filter(d => d > 0).length;
+            const ratio = (forwardCount / totalDir) * 100;
+            document.getElementById('dirBar').style.width = `${ratio}%`;
+        }
+    }
+    
+    updateHistoryUI() {
+        const container = document.getElementById('historyChips');
+        container.innerHTML = '';
+        const names = {
+            'fibonacci':'Fib','prime':'Pr','pi':'Pi','euler':'Eu','golden':'Go','chaos':'Ch',
+            'mersenne':'Me','lcg':'LC','lucas':'Lu','collatz':'Co','mandelbrot':'Ma',
+            'sierpinski':'Si','pascal':'Pa','eratosthenes':'Er',
+            'chronos':'Chr','nexus':'Nx','paradox':'Pd','echo':'Ec',
+            'ouroboros':'Or','singularity':'Sg','void':'Vd','prism':'Pr',
+            'cascade':'Ca','mirror':'Mi','photon':'Ph','gravity':'Gr',
+            'quantum_entanglement':'QE','tachyon':'Ta','brane':'Br'
+        };
+        this.history.slice(0, 20).forEach((h, index) => {
+            const chip = document.createElement('span');
+            const dirText = h.direction > 0 ? '→' : '←';
+            chip.className = `history-chip ${h.direction > 0 ? 'forward' : 'backward'}`;
+            if (h.isMath) chip.classList.add('math');
+            if (index === 0) chip.classList.add('current');
+            chip.textContent = `${dirText} ${names[h.shuffleMode]||'?'} ${h.frame} (${h.frameCount}f)`;
+            container.appendChild(chip);
+        });
+        if (this.history.length === 0) {
+            const empty = document.createElement('span');
+            empty.style.cssText = 'color:#444;font-size:10px';
+            empty.textContent = 'No segments yet';
+            container.appendChild(empty);
+        }
+    }
+}
 
-        // Initialize
-        const video = document.getElementById('videoPlayer');
-        const player = new PrimeBimodalPlayer(video);
-    </script>
-
+const video = document.getElementById('videoPlayer');
+const player = new UltimateShuffleEngine(video);
+console.log('🔥 ZERO DAY + MATHEMATICAL SHUFFLES LOADED!');
+console.log('📐 14 Mathematical Modes + 15 Zero Day Modes = 29 Total!');
+console.log('🎬 Backward playback is now SMOOTH using timeupdate!');
+console.log('Controls: Space=Play/Pause, R=Skip, L=Loop, M=Mute');
+</script>
 </body></html>
